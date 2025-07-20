@@ -2,14 +2,25 @@
   "apiVersion": "template.openshift.io/v1",
   "kind": "Template",
   "metadata": {
-    "name": ""
+    "name": "catalog-ui-build-template"
   },
+  "parameters": [
+    {
+      "name": "NAME",
+      "description": "Application Name",
+      "required": true
+    }
+  ],
   "objects": [
     {
       "apiVersion": "build.openshift.io/v1",
       "kind": "BuildConfig",
       "metadata": {
-        "name": ""
+        "name": "${NAME}",
+        "labels": {
+          "app": "catalog-ui",
+          "group": "catalog"
+        }
       },
       "spec": {
         "output": {
