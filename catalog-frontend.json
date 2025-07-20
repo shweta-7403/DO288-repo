@@ -7,7 +7,7 @@
   "parameters": [
     {
       "name": "NAME",
-      "description": "Application Name",
+      "description": "Name of the application",
       "required": true
     }
   ],
@@ -23,18 +23,20 @@
         }
       },
       "spec": {
-        "output": {
-          "to": {
-            "kind": "ImageStreamTag",
-            "name": "catalog-ui:latest"
-          }
-        },
         "source": {
-          "type": "Dockerfile",
-          "dockerfile": "FROM \nADD . /opt/app-root/src\nEXPOSE 8080\nCMD [\"bash\"]"
+          "type": "Git",
+          "git": {
+            "uri": "https://github.com/sclorg/nginx-ex.git"
+          }
         },
         "strategy": {
           "type": "Docker"
+        },
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "${NAME}:latest"
+          }
         },
         "triggers": [
           {
@@ -44,6 +46,17 @@
             "type": "ImageChange"
           }
         ]
+      }
+    },
+    {
+      "apiVersion": "image.openshift.io/v1",
+      "kind": "ImageStream",
+      "metadata": {
+        "name": "${NAME}",
+        "labels": {
+          "app": "catalog-ui",
+          "group": "catalog"
+        }
       }
     }
   ]
