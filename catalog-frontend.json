@@ -2,27 +2,44 @@
   "apiVersion": "template.openshift.io/v1",
   "kind": "Template",
   "metadata": {
-    "name": "catalog-ui-build-template"
+    "name": "nginx-build-template"
   },
   "parameters": [
     {
       "name": "NAME",
-      "description": "Name of the application",
+      "description": "Application name",
       "required": true
     }
   ],
   "objects": [
+    {
+      "apiVersion": "image.openshift.io/v1",
+      "kind": "ImageStream",
+      "metadata": {
+        "name": "${NAME}",
+        "labels": {
+          "app": "${NAME}",
+          "group": "catalog"
+        }
+      }
+    },
     {
       "apiVersion": "build.openshift.io/v1",
       "kind": "BuildConfig",
       "metadata": {
         "name": "${NAME}",
         "labels": {
-          "app": "catalog-ui",
+          "app": "${NAME}",
           "group": "catalog"
         }
       },
       "spec": {
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "${NAME}:latest"
+          }
+        },
         "source": {
           "type": "Git",
           "git": {
@@ -32,12 +49,6 @@
         "strategy": {
           "type": "Docker"
         },
-        "output": {
-          "to": {
-            "kind": "ImageStreamTag",
-            "name": "${NAME}:latest"
-          }
-        },
         "triggers": [
           {
             "type": "ConfigChange"
@@ -46,17 +57,6 @@
             "type": "ImageChange"
           }
         ]
-      }
-    },
-    {
-      "apiVersion": "image.openshift.io/v1",
-      "kind": "ImageStream",
-      "metadata": {
-        "name": "${NAME}",
-        "labels": {
-          "app": "catalog-ui",
-          "group": "catalog"
-        }
       }
     }
   ]
