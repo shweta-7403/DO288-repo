@@ -43,7 +43,7 @@
         "source": {
           "type": "Git",
           "git": {
-            "uri": "https://github.com/shweta-7403/DO288-repo"
+            "uri": "https://github.com/shweta-7403/DO288-repo.git"
           }
         },
         "strategy": {
