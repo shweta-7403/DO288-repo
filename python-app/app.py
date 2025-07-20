@@ -1,13 +1,13 @@
-from flask import Flask
 import os
+from flask import Flask
 
 app = Flask(__name__)
+port = int(os.getenv("SERVER_PORT", 8080))  # default 8080 if not found
 
 @app.route("/")
-def hello():
-    port = os.getenv("SERVER_PORT", "8081")
-    return f"Hello from Python App running on port {port}!"
+def home():
+    return "Hello from Python!"
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv("SERVER_PORT", 8081)))
-
+    print(f"Starting app on port {port}")
+    app.run(host="0.0.0.0", port=port)
