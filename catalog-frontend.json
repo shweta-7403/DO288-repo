@@ -1,0 +1,39 @@
+{
+  "apiVersion": "template.openshift.io/v1",
+  "kind": "Template",
+  "metadata": {
+    "name": ""
+  },
+  "objects": [
+    {
+      "apiVersion": "build.openshift.io/v1",
+      "kind": "BuildConfig",
+      "metadata": {
+        "name": ""
+      },
+      "spec": {
+        "output": {
+          "to": {
+            "kind": "ImageStreamTag",
+            "name": "catalog-ui:latest"
+          }
+        },
+        "source": {
+          "type": "Dockerfile",
+          "dockerfile": "FROM \nADD . /opt/app-root/src\nEXPOSE 8080\nCMD [\"bash\"]"
+        },
+        "strategy": {
+          "type": "Docker"
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          },
+          {
+            "type": "ImageChange"
+          }
+        ]
+      }
+    }
+  ]
+}
