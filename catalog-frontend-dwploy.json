@@ -12,7 +12,7 @@
     },
     {
       "name": "REGISTRY_URL",
-      "description": "URL of the internal image registry",
+      "description": "URL of the internal image registry (e.g. image-registry.openshift-image-registry.svc:5000/namespace)",
       "required": true
     },
     {
@@ -26,17 +26,21 @@
       "apiVersion": "apps.openshift.io/v1",
       "kind": "DeploymentConfig",
       "metadata": {
-        "name": "${NAME}"
+        "name": "${NAME}",
+        "labels": {
+          "app": "catalog-ui",
+          "group": "catalog"
+        }
       },
       "spec": {
         "replicas": 1,
         "selector": {
-          "app": "catalog-ui"
+          "app": "${NAME}"
         },
         "template": {
           "metadata": {
             "labels": {
-              "app": "catalog-ui",
+              "app": "${NAME}",
               "group": "catalog"
             }
           },
@@ -44,7 +48,7 @@
             "containers": [
               {
                 "name": "${NAME}",
-                "image": "${REGISTRY_URL}/catalog-ui:latest",
+                "image": "${REGISTRY_URL}/${NAME}:latest",
                 "ports": [
                   {
                     "containerPort": 8080
@@ -60,11 +64,15 @@
       "apiVersion": "v1",
       "kind": "Service",
       "metadata": {
-        "name": "${NAME}"
+        "name": "${NAME}",
+        "labels": {
+          "app": "catalog-ui",
+          "group": "catalog"
+        }
       },
       "spec": {
         "selector": {
-          "app": "catalog-ui"
+          "app": "${NAME}"
         },
         "ports": [
           {
@@ -78,13 +86,20 @@
       "apiVersion": "route.openshift.io/v1",
       "kind": "Route",
       "metadata": {
-        "name": "${NAME}"
+        "name": "${NAME}",
+        "labels": {
+          "app": "catalog-ui",
+          "group": "catalog"
+        }
       },
       "spec": {
         "host": "${APP_HOST}",
         "to": {
           "kind": "Service",
-          "name": "catalog-ui"
+          "name": "${NAME}"
+        },
+        "port": {
+          "targetPort": 8080
         }
       }
     }
