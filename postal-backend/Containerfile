@@ -1,0 +1,12 @@
+FROM ubi9-micro
+
+ARG BUILDER=http://downloads.domain7.example.com/postal-1.0
+
+USER root
+RUN curl -L $BUILDER -o /usr/bin/postal && \
+    chmod +x /usr/bin/postal
+
+EXPOSE 8080
+
+CMD ["/usr/bin/postal"]
+
