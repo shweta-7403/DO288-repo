@@ -2,22 +2,17 @@
   "apiVersion": "template.openshift.io/v1",
   "kind": "Template",
   "metadata": {
-    "name": "catalog-ui-deploy-template"
+    "name": "nginx-deploy-template"
   },
   "parameters": [
     {
       "name": "NAME",
-      "description": "Name of the application",
-      "required": true
-    },
-    {
-      "name": "REGISTRY_URL",
-      "description": "URL of the internal image registry (e.g. image-registry.openshift-image-registry.svc:5000/namespace)",
+      "description": "Application name",
       "required": true
     },
     {
       "name": "APP_HOST",
-      "description": "Public route host",
+      "description": "Public route hostname",
       "required": true
     }
   ],
@@ -28,7 +23,7 @@
       "metadata": {
         "name": "${NAME}",
         "labels": {
-          "app": "catalog-ui",
+          "app": "${NAME}",
           "group": "catalog"
         }
       },
@@ -48,7 +43,7 @@
             "containers": [
               {
                 "name": "${NAME}",
-                "image": "${REGISTRY_URL}/${NAME}:latest",
+                "image": "${NAME}:latest",
                 "ports": [
                   {
                     "containerPort": 8080
@@ -57,7 +52,25 @@
               }
             ]
           }
-        }
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          },
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "${NAME}"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "${NAME}:latest"
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -66,20 +79,20 @@
       "metadata": {
         "name": "${NAME}",
         "labels": {
-          "app": "catalog-ui",
+          "app": "${NAME}",
           "group": "catalog"
         }
       },
       "spec": {
-        "selector": {
-          "app": "${NAME}"
-        },
         "ports": [
           {
             "port": 8080,
             "targetPort": 8080
           }
-        ]
+        ],
+        "selector": {
+          "app": "${NAME}"
+        }
       }
     },
     {
@@ -88,7 +101,7 @@
       "metadata": {
         "name": "${NAME}",
         "labels": {
-          "app": "catalog-ui",
+          "app": "${NAME}",
           "group": "catalog"
         }
       },
