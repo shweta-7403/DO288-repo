@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+echo "---> Assembling Python application..."
+
+# Show env variables for debug
+env
+
+# Move to source directory
+cd /tmp/src
+
+# Agar requirements.txt hai to install dependencies
+if [ -f requirements.txt ]; then
+  echo "---> Installing Python dependencies"
+  pip install -r requirements.txt --target /opt/app-root/src/
+fi
+
+# Copy all source code to final app dir
+cp -r . /opt/app-root/src/
+

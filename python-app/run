@@ -1,0 +1,21 @@
+#!/bin/bash -e
+
+# Default port agar env set nahi hai
+export SERVER_PORT=8081
+echo "---> Running Python app on port $SERVER_PORT"
+
+# Debug ke liye env show karo
+env
+
+cd /opt/app-root/src
+
+# Flask app ke liye: app.py hona chahiye
+if [ -f app.py ]; then
+  echo "---> Starting Flask app"
+  export FLASK_APP=app.py
+  exec python -m flask run --host=0.0.0.0 --port=$SERVER_PORT
+else
+  echo "❌ Error: app.py not found!"
+  exit 1
+fi
+
