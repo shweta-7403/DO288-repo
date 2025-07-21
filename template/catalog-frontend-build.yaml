@@ -17,10 +17,11 @@ objects:
       source:
         type: Dockerfile
         dockerfile: |
-          FROM nodejs:16 
-          ADD . /opt/app-root/src
-          EXPOSE 8080
-          CMD ["bash"]
+          FROM nginx:alpine
+          COPY . /usr/share/nginx/html
+          EXPOSE 80
+          CMD ["nginx", "-g", "daemon off;"]
+
       strategy:
         type: Docker
       triggers:
