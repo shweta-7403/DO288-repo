@@ -1,0 +1,28 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${NAME} 
+  
+objects:
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: ${NAME}
+      
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: 'catalog-ui:latest'
+      source:
+        type: Dockerfile
+        dockerfile: |
+          FROM nodejs:16 
+          ADD . /opt/app-root/src
+          EXPOSE 8080
+          CMD ["bash"]
+      strategy:
+        type: Docker
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange

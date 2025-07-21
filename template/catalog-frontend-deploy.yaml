@@ -1,0 +1,53 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: ${NAME}
+
+parameters:
+  - name: NAME
+    description: Name of the application
+    required: true
+  - name: APP_HOST
+    description: Hostname for the route
+    required: true
+
+objects:
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      name: ${NAME}
+    spec:
+      replicas: 2
+      selector:
+        app: catalog-ui
+      template:
+        metadata:
+          labels:
+            app: catalog-ui
+            group: catalog
+        spec:
+          containers:
+            - name: ${NAME}
+              image: 'catalog-ui:latest'  # Refer to local ImageStreamTag
+              ports:
+                - containerPort: 8080     # Match Service and BuildConfig
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${NAME}
+    spec:
+      selector:
+        app: catalog-ui
+      ports:
+        - port: 8080
+          targetPort: 8080
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      name: ${NAME}
+    spec:
+      host: ${APP_HOST}
+      to:
+        kind: Service
+        name: ${NAME}
+
