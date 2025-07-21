@@ -3,13 +3,6 @@ kind: Template
 metadata:
   name: ${NAME}
 
-parameters:
-  - name: NAME
-    description: Name of the application
-    required: true
-  - name: APP_HOST
-    description: Hostname for the route
-    required: true
 
 objects:
   - apiVersion: apps.openshift.io/v1
