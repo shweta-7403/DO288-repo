@@ -1,3 +1,0 @@
-#!/bin/bash
-echo 'Postal service is running on port 8080'
-sleep infinity
