@@ -4,7 +4,7 @@ USER 1001
 WORKDIR /opt/app
 
 # Copy static nginx from builder
-COPY --from=builder /nginx /nginx
+COPY --from=builder sbin/nginx /nginx
 
 # Copy static HTML
 COPY html/ /nginx/html/
