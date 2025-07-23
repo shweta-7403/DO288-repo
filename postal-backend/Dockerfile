@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi-micro
+FROM ubi9-micro
 
 USER 1001
 WORKDIR /opt/app
