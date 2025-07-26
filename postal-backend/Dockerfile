@@ -1,14 +1,18 @@
-FROM ubi9-micro
+FROM ubi9:micro
 
-USER 1001
 WORKDIR /opt/app
 
-# Copy static nginx from builder
-COPY --from=builder sbin/nginx /nginx
+# Copy node binary from build image
+COPY --from=my-node-builder /usr/bin/node /usr/bin/node
+COPY --from=my-node-builder /usr/lib64 /usr/lib64
+COPY --from=my-node-builder /lib64 /lib64
 
-# Copy static HTML
-COPY html/ /nginx/html/
+# Copy app source + node_modules
+COPY --from=my-node-builder /opt/app /opt/app
 
+USER 1001
+
+ENV PORT=8080
 EXPOSE 8080
 
-CMD ["/nginx/sbin/nginx", "-g", "daemon off;"]
+CMD ["node", "app.js"]
