@@ -1,4 +1,0 @@
-#!/bin/bash -e
-echo ">> ASSEMBLE STARTED"
-env
-cp -r /tmp/src/* /opt/app-root/src/

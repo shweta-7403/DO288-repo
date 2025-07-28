@@ -1,6 +1,0 @@
-#!/bin/bash -e
-export SERVER_PORT=8081
-echo ">> RUN STARTED with SERVER_PORT=$SERVER_PORT"
-env | grep SERVER_PORT
-cd /opt/app-root/src
-exec python3 app.py
